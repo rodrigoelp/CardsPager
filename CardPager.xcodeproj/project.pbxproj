@@ -13,6 +13,7 @@
 		DC2B607C2459648A00B7B072 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC2B607B2459648A00B7B072 /* Assets.xcassets */; };
 		DC2B607F2459648A00B7B072 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC2B607E2459648A00B7B072 /* Preview Assets.xcassets */; };
 		DC2B60822459648A00B7B072 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC2B60802459648A00B7B072 /* LaunchScreen.storyboard */; };
+		DC2B608A24596AB200B7B072 /* Pager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B608924596AB200B7B072 /* Pager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		DC2B607E2459648A00B7B072 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DC2B60812459648A00B7B072 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC2B60832459648A00B7B072 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DC2B608924596AB200B7B072 /* Pager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				DC2B60752459648900B7B072 /* AppDelegate.swift */,
 				DC2B60772459648900B7B072 /* SceneDelegate.swift */,
 				DC2B60792459648900B7B072 /* ContentView.swift */,
+				DC2B608924596AB200B7B072 /* Pager.swift */,
 				DC2B607B2459648A00B7B072 /* Assets.xcassets */,
 				DC2B60802459648A00B7B072 /* LaunchScreen.storyboard */,
 				DC2B60832459648A00B7B072 /* Info.plist */,
@@ -147,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC2B60762459648900B7B072 /* AppDelegate.swift in Sources */,
+				DC2B608A24596AB200B7B072 /* Pager.swift in Sources */,
 				DC2B60782459648900B7B072 /* SceneDelegate.swift in Sources */,
 				DC2B607A2459648900B7B072 /* ContentView.swift in Sources */,
 			);
