@@ -1,13 +1,34 @@
 import SwiftUI
 
+private enum DragState {
+    case inactive
+    case active(translation: CGSize)
+
+    var isDragging: Bool {
+        if case .active = self { return true }
+        return false
+    }
+
+    var translation: CGSize {
+        if case let .active(translation) = self {
+            return translation
+        }
+        return .zero
+    }
+}
+
 struct Pager<Content>: View where Content: View {
     private let contentBuilder: () -> [Content]
     private let views: [Content]
+    private let cardSize: CGSize
     @State private var indexWindow = ItemsWindow(activeIndex: 0, maxIndex: 0) // initialised in an invalid state.
+    @GestureState private var dragState = DragState.inactive
 
-    @inlinable init(@ViewBuilder content: @escaping () -> [Content]) {
+    @inlinable init(cardSize: CGSize = .init(width: 300, height: 500),
+                    @ViewBuilder content: @escaping () -> [Content]) {
         contentBuilder = content
         views = contentBuilder()
+        self.cardSize = cardSize
     }
 
     var body: some View {
@@ -20,6 +41,11 @@ struct Pager<Content>: View where Content: View {
                 }.offset(x: self.elementLateralOffset(index))
             }
         }
+        .gesture(
+            DragGesture()
+                .updating(self.$dragState) { drag, state, trans in
+                    state = .active(translation: drag.translation)
+            }.onEnded(self.dragEnded))
             .onAppear(perform: {
                 self.loadCards()
             })
@@ -31,12 +57,30 @@ struct Pager<Content>: View where Content: View {
         print(String(describing: indexWindow))
     }
 
+    private func dragEnded(value: DragGesture.Value) {
+        let halfway = cardSize.width * 0.51
+        var active = indexWindow.active
+        if value.predictedEndTranslation.width > halfway
+            || value.translation.width > halfway {
+            if active - 1 >= 0 {
+                active = active - 1
+            }
+        } else if value.predictedEndTranslation.width < -halfway
+            || value.translation.width < -halfway {
+            if active + 1 < views.count {
+                active = active + 1
+            }
+        }
+
+        indexWindow = indexWindow.update(activeIndex: active)
+    }
+
     private func elementLateralOffset(_ index: Int) -> CGFloat {
         if index == indexWindow.active { return 0 }
-        if index == indexWindow.left { return -5 }
-        if index == indexWindow.leftMost { return -10 }
-        if index == indexWindow.right { return 5 }
-        if index == indexWindow.rightMost { return 10 }
+        if index == indexWindow.left { return -50 }
+        if index == indexWindow.leftMost { return -100 }
+        if index == indexWindow.right { return 50 }
+        if index == indexWindow.rightMost { return 100 }
         return 900
     }
 }
