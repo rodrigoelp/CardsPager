@@ -19,30 +19,34 @@ private enum DragState {
 
 struct Pager<Content>: View where Content: View {
     private let contentBuilder: () -> [Content]
-    private let views: [Content]
+    private let views: [CenteredCard<Content>]
     private let cardSize: CGSize
+    private let padding: CGFloat
     @State private var indexWindow: ItemsWindow? = nil // initialised in an invalid state.
     @GestureState private var dragState = DragState.inactive
 
-    @inlinable init(cardSize: CGSize = .init(width: 300, height: 500),
+    @inlinable init(spacing padding: CGFloat = 20,
+                    cardSize: CGSize = .init(width: 300, height: 500),
                     @ViewBuilder content: @escaping () -> [Content]) {
         contentBuilder = content
-        views = contentBuilder()
+        views = contentBuilder().map { view in CenteredCard { view } }
+        self.padding = padding
         self.cardSize = cardSize
     }
 
     var body: some View {
         ZStack {
             ForEach(self.indexWindow?.nonActive ?? [], id: \.self) { index in
-                CenteredCard {
-                    self.views[index]
-                }.offset(x: self.elementLateralOffset(index))
+                self.views[index]
+                    .offset(x: self.elementLateralOffset(index))
+                    .animation(.interactiveSpring())
+                    .scaleEffect(0.85)
             }
 
             self.indexWindow.map { window in
-                CenteredCard {
-                    self.views[window.active]
-                }.offset(x: self.elementLateralOffset(window.active))
+                self.views[window.active]
+                    .offset(x: self.elementLateralOffset(window.active))
+                    .animation(.easeInOut)
             }
             VStack {
                 Spacer()
@@ -87,12 +91,12 @@ struct Pager<Content>: View where Content: View {
 
     private func elementLateralOffset(_ index: Int) -> CGFloat {
         guard let indexWindow = indexWindow else { return 9001 } // It's over 9000!
-        if index == indexWindow.active { return 0 }
-        if index == indexWindow.left { return -50 }
-        if index == indexWindow.leftMost { return -100 }
-        if index == indexWindow.right { return 50 }
-        if index == indexWindow.rightMost { return 100 }
-        return 900
+        if index == indexWindow.active { return dragState.translation.width }
+        if index == indexWindow.left { return dragState.translation.width - (cardSize.width + padding) }
+        if index == indexWindow.leftMost { return dragState.translation.width - 2*(cardSize.width + padding) }
+        if index == indexWindow.right { return dragState.translation.width + cardSize.width + padding }
+        if index == indexWindow.rightMost { return dragState.translation.width +  2 * (cardSize.width + padding) }
+        return 9001 // It doesn't really matter what value is provided here, it won't be rendered
     }
 }
 
