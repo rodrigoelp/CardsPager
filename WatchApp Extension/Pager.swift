@@ -50,8 +50,10 @@ struct Pager<Content>: View where Content: View {
             }
             VStack {
                 Spacer()
-                Text("Active: \(String(describing: self.indexWindow?.active))")
-                Text(String(describing: self.indexWindow?.nonActive))
+                Text("Focused: \(String(describing: self.indexWindow?.active ?? 0))\nOther:\(String(describing: self.indexWindow?.nonActive ?? []))")
+                    .font(.footnote)
+                Text("Size: \(String(describing:cardSize))")
+                    .font(.footnote)
             }
         }
         .gesture(
