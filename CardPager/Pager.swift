@@ -119,7 +119,7 @@ private enum Helper {
     }
 
     static func getRight(from index: Int, maxIndex: Int) -> Int? {
-        guard maxIndex >= 1 && index < maxIndex else { return nil }
+        guard maxIndex >= 1 && index + 1 < maxIndex else { return nil }
         return index + 1
     }
 }
