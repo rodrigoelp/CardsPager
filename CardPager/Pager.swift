@@ -21,7 +21,7 @@ struct Pager<Content>: View where Content: View {
     private let contentBuilder: () -> [Content]
     private let views: [Content]
     private let cardSize: CGSize
-    @State private var indexWindow = ItemsWindow(activeIndex: 0, maxIndex: 0) // initialised in an invalid state.
+    @State private var indexWindow: ItemsWindow? = nil // initialised in an invalid state.
     @GestureState private var dragState = DragState.inactive
 
     @inlinable init(cardSize: CGSize = .init(width: 300, height: 500),
@@ -33,12 +33,21 @@ struct Pager<Content>: View where Content: View {
 
     var body: some View {
         ZStack {
-            ForEach(0..<self.views.count) { index in
-                VStack {
-                    Spacer()
+            ForEach(self.indexWindow?.nonActive ?? [], id: \.self) { index in
+                CenteredCard {
                     self.views[index]
-                    Spacer()
                 }.offset(x: self.elementLateralOffset(index))
+            }
+
+            self.indexWindow.map { window in
+                CenteredCard {
+                    self.views[window.active]
+                }.offset(x: self.elementLateralOffset(window.active))
+            }
+            VStack {
+                Spacer()
+                Text("Active: \(String(describing: self.indexWindow?.active))")
+                Text(String(describing: self.indexWindow?.nonActive))
             }
         }
         .gesture(
@@ -58,6 +67,7 @@ struct Pager<Content>: View where Content: View {
     }
 
     private func dragEnded(value: DragGesture.Value) {
+        guard let indexWindow = indexWindow else { return }
         let halfway = cardSize.width * 0.51
         var active = indexWindow.active
         if value.predictedEndTranslation.width > halfway
@@ -72,16 +82,32 @@ struct Pager<Content>: View where Content: View {
             }
         }
 
-        indexWindow = indexWindow.update(activeIndex: active)
+        self.indexWindow = indexWindow.update(activeIndex: active)
     }
 
     private func elementLateralOffset(_ index: Int) -> CGFloat {
+        guard let indexWindow = indexWindow else { return 9001 } // It's over 9000!
         if index == indexWindow.active { return 0 }
         if index == indexWindow.left { return -50 }
         if index == indexWindow.leftMost { return -100 }
         if index == indexWindow.right { return 50 }
         if index == indexWindow.rightMost { return 100 }
         return 900
+    }
+}
+
+private struct CenteredCard<Card>: View where Card: View {
+    private let content: () -> Card
+    @inlinable init(@ViewBuilder content: @escaping () -> Card) {
+        self.content = content
+    }
+
+    var body: some View {
+        VStack {
+            Spacer()
+            content()
+            Spacer()
+        }
     }
 }
 
@@ -93,6 +119,8 @@ private struct ItemsWindow {
     let right: Int?
     let rightMost: Int?
 
+    let nonActive: [Int]
+
     private let maxIndex: Int
 
     init(activeIndex: Int = 0, maxIndex: Int) {
@@ -102,6 +130,7 @@ private struct ItemsWindow {
         leftMost = left.flatMap { Helper.getLeft(from: $0, maxIndex: maxIndex) }
         rightMost = right.flatMap { Helper.getRight(from: $0, maxIndex: maxIndex) }
         self.maxIndex = maxIndex
+        nonActive = [ leftMost, rightMost, left, right ].compactMap { $0 }
     }
 
     func update(activeIndex: Int) -> ItemsWindow {
