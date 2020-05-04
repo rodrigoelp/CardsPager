@@ -29,7 +29,8 @@ struct ContentView: View {
                         .asCard(geometry: geometry, backgroundColor: .purple)
                 ]
             }
-        }
+        }.edgesIgnoringSafeArea(.all)
+            .navigationBarHidden(true)
     }
 }
 
