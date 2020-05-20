@@ -36,24 +36,14 @@ struct Pager<Content>: View where Content: View {
 
     var body: some View {
         ZStack {
-            ForEach(self.indexWindow?.nonActive ?? [], id: \.self) { index in
-                self.views[index]
-                    .offset(x: self.elementLateralOffset(index))
-                    .animation(.interactiveSpring())
-                    .scaleEffect(0.85)
-            }
-
-            self.indexWindow.map { window in
-                self.views[window.active]
-                    .offset(x: self.elementLateralOffset(window.active))
-                    .animation(.easeInOut)
-            }
-            VStack {
-                Spacer()
-                Text("Focused: \(String(describing: self.indexWindow?.active ?? 0))\nOther:\(String(describing: self.indexWindow?.nonActive ?? []))")
-                    .font(.footnote)
-                Text("Size: \(String(describing:cardSize))")
-                    .font(.footnote)
+            ForEach(Array(self.views.enumerated()), id: \.offset) { pair in
+                AnyView(pair.element)
+                    .offset(x: self.elementLateralOffset(pair.offset))
+                    .animation(.interpolatingSpring(stiffness: 300, damping: 300, initialVelocity: 20))
+                    .scaleEffect(self.elementScale(pair.offset))
+                    .animation(.interpolatingSpring(stiffness: 300, damping: 300, initialVelocity: 20))
+                    .zIndex(self.elementZIndex(pair.offset))
+                    .visibility(visible: self.elementVisibility(pair.offset))
             }
         }
         .gesture(
@@ -100,6 +90,40 @@ struct Pager<Content>: View where Content: View {
         if index == indexWindow.rightMost { return dragState.translation.width +  2 * (cardSize.width + padding) }
         return 9001 // It doesn't really matter what value is provided here, it won't be rendered
     }
+
+    private func elementScale(_ index: Int) -> CGFloat {
+        guard let indexWindow = indexWindow else { return 0 }
+        if index == indexWindow.active { return 1 }
+        else if indexWindow.nonActive.contains(index) {
+            return 0.85
+        }
+        return 0
+    }
+
+    private func elementZIndex(_ index: Int) -> Double {
+        guard let indexWindow = indexWindow else { return 0 }
+        if index == indexWindow.active { return 2 }
+        else if index == indexWindow.left || index == indexWindow.right { return 1 }
+        return 0
+    }
+
+    private func elementVisibility(_ index: Int) -> Bool {
+        guard let indexWindow = indexWindow else { return false }
+        return index == indexWindow.active
+            || indexWindow.nonActive.contains(index)
+    }
+}
+
+private extension View {
+    func visibility(visible: Bool) -> some View {
+        return Group {
+            if visible {
+                self
+            } else {
+                self.hidden()
+            }
+        }
+    }
 }
 
 private struct CenteredCard<Card>: View where Card: View {
@@ -110,9 +134,9 @@ private struct CenteredCard<Card>: View where Card: View {
 
     var body: some View {
         VStack {
-            Spacer()
+//            Spacer()
             content()
-            Spacer()
+//            Spacer()
         }
     }
 }
