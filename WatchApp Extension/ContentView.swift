@@ -3,33 +3,44 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var isToggled: Bool = false
     var body: some View {
         GeometryReader { geometry in
             Pager(cardSize: CGSize(width: geometry.size.height - 20, height: geometry.size.height - 40)) {
                 [
-                    Group { Text("Page 0") }
+                    AnyView(
+                        VStack {
+                            Text("Some title.")
+                            Toggle(isOn: self.$isToggled, label: { Text("Page 0") })
+                        }.padding(20)
+                    )
                         .asCard(geometry: geometry, backgroundColor: .purple),
 
-                    Group { Text("Page 1") }
+                    AnyView(Text("Page 1") )
                         .asCard(geometry: geometry, backgroundColor: .blue),
 
-                    Group { Text("Page 2") }
+                    AnyView(Text("Page 2") )
                         .asCard(geometry: geometry, backgroundColor: .green),
 
-                    Group { Text("Page 3") }
+                    AnyView(Text("Page 3") )
                         .asCard(geometry: geometry, backgroundColor: .orange),
 
-                    Group { Text("Page 4") }
+                    AnyView(Text("Page 4") )
                         .asCard(geometry: geometry, backgroundColor: .yellow),
 
-                    Group { Text("Page 5") }
+                    AnyView(Text("Page 5") )
                         .asCard(geometry: geometry, backgroundColor: .red),
-
-                    Group { Text("Page 6") }
+                    
+                    AnyView(Text("Page 6") )
                         .asCard(geometry: geometry, backgroundColor: .purple)
                 ]
             }
-        }.edgesIgnoringSafeArea(.all)
+        }.sheet(isPresented: self.$isToggled, content: {
+            VStack {
+                Text("Something something dark side.")
+            }
+        })
+            .edgesIgnoringSafeArea(.all)
             .navigationBarHidden(true)
     }
 }
