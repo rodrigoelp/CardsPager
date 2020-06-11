@@ -1,6 +1,7 @@
 //
 
 import SwiftUI
+import Pager
 
 struct ContentView: View {
     var body: some View {
