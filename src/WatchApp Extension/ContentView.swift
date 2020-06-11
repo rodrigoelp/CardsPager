@@ -1,12 +1,13 @@
 //
 
 import SwiftUI
+import Pager
 
 struct ContentView: View {
     @State var isToggled: Bool = false
     var body: some View {
         GeometryReader { geometry in
-            Pager(cardSize: CGSize(width: geometry.size.height - 20, height: geometry.size.height - 40)) {
+            Pager(style: styleGenerator(geometry)) {
                 [
                     AnyView(
                         VStack {
@@ -43,6 +44,10 @@ struct ContentView: View {
             .edgesIgnoringSafeArea(.all)
             .navigationBarHidden(true)
     }
+}
+
+func styleGenerator(_ geometry: GeometryProxy) -> PagerStyle {
+    return PagerStyle(pageSize: CGSize(width: geometry.size.height - 20, height: geometry.size.height - 40))
 }
 
 extension View {
