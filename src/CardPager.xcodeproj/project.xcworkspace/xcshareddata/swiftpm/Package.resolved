@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Pager",
+        "repositoryURL": "https://github.com/rodrigoelp/swiftui-pager",
+        "state": {
+          "branch": null,
+          "revision": "f2386cf1c3b2b1ccaead86495bbbbaebc5945a11",
+          "version": "0.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

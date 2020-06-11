@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC16CA1624920A3100606638 /* Pager in Frameworks */ = {isa = PBXBuildFile; productRef = DC16CA1524920A3100606638 /* Pager */; };
 		DC2B60762459648900B7B072 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B60752459648900B7B072 /* AppDelegate.swift */; };
 		DC2B60782459648900B7B072 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B60772459648900B7B072 /* SceneDelegate.swift */; };
 		DC2B607A2459648900B7B072 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2B60792459648900B7B072 /* ContentView.swift */; };
@@ -97,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC16CA1624920A3100606638 /* Pager in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +205,9 @@
 				DC51AC33245FDA4D006E4BD6 /* PBXTargetDependency */,
 			);
 			name = CardPager;
+			packageProductDependencies = (
+				DC16CA1524920A3100606638 /* Pager */,
+			);
 			productName = CardPager;
 			productReference = DC2B60722459648900B7B072 /* CardPager.app */;
 			productType = "com.apple.product-type.application";
@@ -271,6 +276,9 @@
 				Base,
 			);
 			mainGroup = DC2B60692459648900B7B072;
+			packageReferences = (
+				DC16CA1424920A3100606638 /* XCRemoteSwiftPackageReference "swiftui-pager" */,
+			);
 			productRefGroup = DC2B60732459648900B7B072 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -651,6 +659,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC16CA1424920A3100606638 /* XCRemoteSwiftPackageReference "swiftui-pager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rodrigoelp/swiftui-pager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC16CA1524920A3100606638 /* Pager */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC16CA1424920A3100606638 /* XCRemoteSwiftPackageReference "swiftui-pager" */;
+			productName = Pager;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DC2B606A2459648900B7B072 /* Project object */;
 }
